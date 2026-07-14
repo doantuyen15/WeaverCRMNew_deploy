@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Tab Mockup — Weaver CRM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', 'Be Vietnam Pro', sans-serif; }
+  .badge-auto { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 4px; }
+  .badge-unread { background: #dc2626; color: white; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 9999px; min-width: 18px; text-align: center; }
+  .tab-active { border-bottom: 2px solid #f97316; color: #f97316; font-weight: 600; }
+  .tab-idle { border-bottom: 2px solid transparent; color: #6b7280; font-weight: 500; }
+  .pii-phone { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 4px; font-family: 'SF Mono', monospace; font-size: 12px; }
+  .pii-email { background: #ede9fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px; font-family: 'SF Mono', monospace; font-size: 12px; }
+  .sentiment-pos { color: #10b981; }
+  .sentiment-neg { color: #dc2626; }
+  .sentiment-neu { color: #6b7280; }
+  .pulse-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #dc2626; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  /* Hide sections by default; show only the active one */
+  .view { display: none; }
+  .view.active { display: block; }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+</style>
+</head>
+<body class="bg-gray-50">
+
+<!-- TOP NAV (AppShell simulation) -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+  <div class="flex items-center px-4 h-14 gap-3">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm">W</div>
+      <span class="font-semibold text-gray-800">Weaver CRM</span>
+    </div>
+    <div class="ml-6 flex items-center gap-1 text-sm text-gray-600">
+      <span>Dashboard</span>
+      <span class="text-gray-400 mx-1">/</span>
+      <span class="font-semibold text-orange-600 flex items-center gap-2">
+        <!-- Social tab icon (Globe) with badge -->
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Mạng xã hội
+        <span class="badge-unread" title="7 unread engagement events">7</span>
+      </span>
+    </div>
+    <div class="ml-auto flex items-center gap-4 text-sm text-gray-600">
+      <span class="cursor-pointer hover:text-orange-600">🔔 <span class="badge-unread">3</span></span>
+      <span>admin@weaver.edu.vn</span>
+    </div>
+  </div>
+  <!-- Sub-tabs -->
+  <nav class="flex items-center px-6 bg-white border-t border-gray-100 text-sm" id="tabs">
+    <button data-view="inbox" class="tab-active px-4 h-11 flex items-center gap-2">
+      Hộp thư
+      <span class="badge-unread">3</span>
+    </button>
+    <button data-view="posts" class="tab-idle px-4 h-11">Bài viết</button>
+    <button data-view="comments" class="tab-idle px-4 h-11 flex items-center gap-2">
+      Bình luận
+      <span class="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-0.5 rounded-full">12 mới</span>
+    </button>
+    <button data-view="channels" class="tab-idle px-4 h-11">Kênh</button>
+    <button data-view="reports" class="tab-idle px-4 h-11">Báo cáo</button>
+  </nav>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 py-6">
+
+  <!-- ========== INBOX VIEW ========== -->
+  <section class="view active" id="view-inbox">
+    <div class="grid grid-cols-12 gap-6">
+      <!-- Thread list -->
+      <aside class="col-span-4 bg-white rounded-xl border border-gray-200 max-h-[80vh] overflow-y-auto scrollbar-thin">
+        <div class="sticky top-0 bg-white p-3 border-b border-gray-100">
+          <input type="text" placeholder="Tìm theo tên, SĐT, nội dung..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-orange-400">
+          <div class="flex gap-2 mt-2 text-xs">
+            <button class="px-2 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">Tất cả</button>
+            <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Chưa đọc</button>
+            <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Cần trả lời</button>
+            <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Đã gắn</button>
+          </div>
+        </div>
+        <ul>
+          <li class="px-3 py-3 border-b border-gray-100 bg-orange-50 cursor-pointer hover:bg-orange-100">
+            <div class="flex justify-between items-start">
+              <div class="flex items-start gap-2">
+                <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=1" alt="">
+                <div class="flex-1">
+                  <div class="font-semibold text-sm text-gray-900">Nguyễn Văn A</div>
+                  <div class="text-xs text-gray-500 truncate w-44">Cho mình hỏi lịch khai giảng IELTS tháng 7...</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-gray-500">2h</div>
+                <span class="badge-unread inline-block mt-1">2</span>
+              </div>
+            </div>
+          </li>
+          <li class="px-3 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
+            <div class="flex justify-between items-start">
+              <div class="flex items-start gap-2">
+                <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=2" alt="">
+                <div class="flex-1">
+                  <div class="font-medium text-sm text-gray-900">Trần Thị B</div>
+                  <div class="text-xs text-gray-500 truncate w-44">Cảm ơn admin đã tư vấn...</div>
+                </div>
+              </div>
+              <div class="text-xs text-gray-500">3 ngày</div>
+            </div>
+          </li>
+          <li class="px-3 py-3 border-b border-gray-100 bg-orange-50 cursor-pointer hover:bg-orange-100">
+            <div class="flex justify-between items-start">
+              <div class="flex items-start gap-2">
+                <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=3" alt="">
+                <div class="flex-1">
+                  <div class="font-semibold text-sm text-gray-900">Lê Văn C</div>
+                  <div class="text-xs text-gray-500 truncate w-44">Mình muốn đăng ký lớp Speaking...</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-gray-500">5h</div>
+                <span class="badge-unread inline-block mt-1">1</span>
+              </div>
+            </div>
+          </li>
+          <li class="px-3 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
+            <div class="flex justify-between items-start">
+              <div class="flex items-start gap-2">
+                <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=4" alt="">
+                <div class="flex-1">
+                  <div class="font-medium text-sm text-gray-900">Phạm Thị D</div>
+                  <div class="text-xs text-gray-500 truncate w-44">Còn nhận học sinh lớp 9 không ạ?</div>
+                </div>
+              </div>
+              <div class="text-xs text-gray-500">1 tuần</div>
+            </div>
+          </li>
+          <!-- 10 more compressed threads -->
+          <li class="px-3 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
+            <div class="flex items-start gap-2">
+              <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=5" alt="">
+              <div class="flex-1">
+                <div class="text-sm">Hoàng Văn E <span class="text-xs text-gray-400 ml-2">2 tuần</span></div>
+                <div class="text-xs text-gray-500 truncate w-44">Học phí lớp B2 là bao nhiêu?</div>
+              </div>
+            </div>
+          </li>
+          <li class="px-3 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50">
+            <div class="flex items-start gap-2">
+              <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=6" alt="">
+              <div class="flex-1">
+                <div class="text-sm">Đỗ Thị F <span class="text-xs text-gray-400 ml-2">2 tuần</span></div>
+                <div class="text-xs text-gray-500 truncate w-44">Có lớp online không ạ?</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Conversation detail -->
+      <div class="col-span-8 bg-white rounded-xl border border-gray-200 flex flex-col max-h-[80vh]">
+        <header class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
+          <img class="w-10 h-10 rounded-full" src="https://i.pravatar.cc/100?img=1" alt="">
+          <div>
+            <div class="font-semibold text-gray-900">Nguyễn Văn A</div>
+            <div class="text-xs text-gray-500">Trên Messenger · Fanpage cakhoman.vn</div>
+          </div>
+          <div class="ml-auto flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full">Lead mới</span>
+            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">CS: Nguyễn Lan</span>
+          </div>
+        </header>
+
+        <!-- Chat -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-3 scrollbar-thin">
+          <div class="flex justify-start">
+            <div class="max-w-md bg-gray-100 px-4 py-2.5 rounded-2xl rounded-tl-md text-sm">
+              Chào shop, mình muốn hỏi lịch khai giảng IELTS tháng 7?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="max-w-md bg-orange-500 text-white px-4 py-2.5 rounded-2xl rounded-tr-md text-sm">
+              Chào bạn! Hiện tại lớp IELTS Foundation khai giảng 15/7 và IELTS Intensive 22/7 ạ. Bạn trình độ hiện tại khoảng bao nhiêu?
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="max-w-md bg-gray-100 px-4 py-2.5 rounded-2xl rounded-tl-md text-sm">
+              Mình mới học được 2 tháng, target 6.5. SĐT mình <span class="pii-phone">0987654321</span> để bên bạn gọi tư vấn nha.
+            </div>
+          </div>
+          <!-- Auto-create trigger -->
+          <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm">
+            <div class="font-semibold text-emerald-800 mb-1 flex items-center gap-2">
+              <span class="badge-auto">✨ AUTO-CREATE</span>
+              Phát hiện SĐT VN hợp lệ → tự tạo hồ sơ
+            </div>
+            <div class="text-xs text-emerald-700 mb-2">
+              Confidence: <b>0.85</b> · Quyết định: <code>auto_create_by_phone</code> · Source: <code>social_events/fb/cakhoman.vn/123/comments/c-abc123</code>
+            </div>
+            <div class="bg-white rounded p-2 mb-2 text-xs space-y-1 text-gray-700">
+              <div><b>Pending Student ID:</b> <code class="text-orange-600">SP-2026-001234</code></div>
+              <div><b>Tên:</b> Nguyễn Văn A (lấy từ Messenger profile)</div>
+              <div><b>Phone:</b> <span class="pii-phone">0987654321</span></div>
+              <div><b>Status:</b> <span class="text-gray-500">INCOMPLETE</span> · Created 2 phút trước</div>
+            </div>
+            <div class="flex gap-2">
+              <button class="text-xs px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md">Mở hồ sơ lead</button>
+              <button class="text-xs px-3 py-1.5 bg-white border border-emerald-300 text-emerald-700 rounded-md hover:bg-emerald-50">Rollback (7 ngày)</button>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="max-w-md bg-orange-500 text-white px-4 py-2.5 rounded-2xl rounded-tr-md text-sm">
+              Cảm ơn bạn, bên mình sẽ liên hệ trong vòng 30 phút nhé!
+            </div>
+          </div>
+        </div>
+
+        <!-- Reply box -->
+        <div class="border-t border-gray-100 p-3">
+          <textarea placeholder="Nhập trả lời... (Enter để gửi, Shift+Enter xuống dòng)" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg resize-none focus:outline-none focus:border-orange-400" rows="2"></textarea>
+          <div class="flex justify-between items-center mt-2 text-xs">
+            <div class="text-gray-500">Tin nhắn sẽ gửi qua <b>Messenger</b> như <b>cakhoman.vn</b></div>
+            <button class="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium">Gửi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== POSTS VIEW ========== -->
+  <section class="view" id="view-posts">
+    <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4 flex items-center gap-4">
+      <div>
+        <div class="text-xs text-gray-500">Fanpage đang kết nối</div>
+        <div class="font-semibold text-gray-900">CakHoman.vn</div>
+      </div>
+      <div class="text-xs text-gray-500">12,400 followers · 124 bài viết</div>
+      <div class="ml-auto text-xs text-gray-500">Cache 2 phút trước · <a class="text-orange-600 hover:underline cursor-pointer">Refresh</a></div>
+    </div>
+    <div class="grid gap-4">
+      <!-- Post 1 -->
+      <article class="bg-white rounded-xl border border-gray-200 p-5">
+        <header class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-orange-500 flex items-center justify-center text-white font-bold">C</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">CakHoman.vn</div>
+            <div class="text-xs text-gray-500">2 giờ trước · 🌐</div>
+          </div>
+          <button class="text-xs text-gray-500 hover:text-gray-700">⋯</button>
+        </header>
+        <p class="text-sm text-gray-800 mb-3">🍰 Khai giảng khóa Bánh Pháp tháng 7! Giảm 30% học phí cho 20 bạn đăng ký đầu tiên. Inbox để được tư vấn chi tiết nhé!</p>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div class="aspect-video bg-gradient-to-br from-pink-200 to-orange-200 rounded-lg"></div>
+          <div class="aspect-video bg-gradient-to-br from-yellow-200 to-pink-200 rounded-lg"></div>
+        </div>
+        <footer class="flex items-center gap-4 text-sm text-gray-600 border-t border-gray-100 pt-3">
+          <span class="flex items-center gap-1.5 sentiment-pos">❤️ <b>38</b></span>
+          <span class="flex items-center gap-1.5">💬 <b>14</b> bình luận <span class="bg-orange-100 text-orange-700 text-xs font-semibold px-1.5 py-0.5 rounded">3 mới</span></span>
+          <span class="flex items-center gap-1.5">↗ <b>5</b> lượt chia sẻ</span>
+          <button class="ml-auto text-orange-600 text-xs font-medium hover:underline">Mở chi tiết →</button>
+        </footer>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="bg-white rounded-xl border border-gray-200 p-5">
+        <header class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-orange-500 flex items-center justify-center text-white font-bold">C</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">CakHoman.vn</div>
+            <div class="text-xs text-gray-500">1 ngày trước</div>
+          </div>
+        </header>
+        <p class="text-sm text-gray-800 mb-3">Workshop "Bánh Mì Việt Nam" cuối tuần này! Học làm bánh mì handmade tại nhà. Link đăng ký trong bio 🌾</p>
+        <footer class="flex items-center gap-4 text-sm text-gray-600 border-t border-gray-100 pt-3">
+          <span class="flex items-center gap-1.5 sentiment-pos">❤️ <b>22</b></span>
+          <span class="flex items-center gap-1.5">💬 <b>8</b></span>
+          <span class="flex items-center gap-1.5">↗ <b>1</b></span>
+          <button class="ml-auto text-orange-600 text-xs font-medium hover:underline">Mở chi tiết →</button>
+        </footer>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="bg-white rounded-xl border border-gray-200 p-5">
+        <header class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-orange-500 flex items-center justify-center text-white font-bold">C</div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm">CakHoman.vn</div>
+            <div class="text-xs text-gray-500">3 ngày trước</div>
+          </div>
+        </header>
+        <p class="text-sm text-gray-800 mb-3">Mini-game: Tag 2 người bạn dưới comment để nhận voucher 100K 🍰</p>
+        <footer class="flex items-center gap-4 text-sm text-gray-600 border-t border-gray-100 pt-3">
+          <span class="flex items-center gap-1.5 sentiment-pos">❤️ <b>156</b></span>
+          <span class="flex items-center gap-1.5">💬 <b>94</b> <span class="bg-orange-100 text-orange-700 text-xs font-semibold px-1.5 py-0.5 rounded">8 có PII</span></span>
+          <span class="flex items-center gap-1.5 sentiment-pos">🔥 <b>12</b> Fire</span>
+          <button class="ml-auto text-orange-600 text-xs font-medium hover:underline">Mở chi tiết →</button>
+        </footer>
+      </article>
+    </div>
+    <div class="text-center mt-6">
+      <button class="text-sm text-orange-600 hover:underline">Tải thêm 25 bài viết...</button>
+    </div>
+  </section>
+
+  <!-- ========== COMMENTS VIEW ========== -->
+  <section class="view" id="view-comments">
+    <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4 flex flex-wrap gap-3 items-center">
+      <select class="text-sm border border-gray-200 rounded-md px-2 py-1.5">
+        <option>Tất cả kênh</option>
+        <option>cakhoman.vn</option>
+      </select>
+      <select class="text-sm border border-gray-200 rounded-md px-2 py-1.5">
+        <option>Sắp xếp: Mới nhất</option>
+        <option>Mới nhất (realtime)</option>
+        <option>Có PII (auto-create)</option>
+        <option>Cần trả lời</option>
+      </select>
+      <label class="flex items-center gap-2 text-sm text-gray-700">
+        <input type="checkbox" checked class="rounded"> Chỉ có PII (SĐT/Email)
+      </label>
+      <div class="ml-auto text-xs text-gray-500">
+        <span class="pulse-dot"></span> Đang stream realtime (28 comments / 24h)
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+      <!-- Comment 1: AUTO-CREATE -->
+      <div class="p-4 hover:bg-gray-50">
+        <div class="flex items-start gap-3">
+          <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=11" alt="">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-semibold text-sm">Nguyễn Thị Mai</span>
+              <span class="text-xs text-gray-500">@mai.nguyen · 12 phút trước</span>
+              <span class="badge-auto">✨ AUTO-CREATE</span>
+              <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Confidence 0.85 · Phone</span>
+            </div>
+            <div class="mt-2 text-sm text-gray-800">
+              Cho mình hỏi lịch khai giảng tháng 7 với! Mình ở Hà Nội, có lớp online không ạ? SĐT mình <span class="pii-phone">0912345678</span> để tư vấn nha.
+            </div>
+            <div class="text-xs text-gray-500 mt-2">
+              Trên bài viết: <a class="text-orange-600 hover:underline cursor-pointer">"Khai giảng khóa Bánh Pháp tháng 7!"</a>
+            </div>
+            <div class="mt-2 flex gap-3 text-xs">
+              <button class="text-orange-600 hover:underline font-medium">Mở lead #SP-2026-001235 →</button>
+              <button class="text-gray-600 hover:underline">Trả lời (Messenger)</button>
+              <button class="text-gray-600 hover:underline">Ẩn comment</button>
+            </div>
+          </div>
+          <button class="text-gray-400 hover:text-gray-600 text-xs">⋯</button>
+        </div>
+      </div>
+
+      <!-- Comment 2: EMAIL auto-create -->
+      <div class="p-4 hover:bg-gray-50">
+        <div class="flex items-start gap-3">
+          <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=12" alt="">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-semibold text-sm">Trần Văn Nam</span>
+              <span class="text-xs text-gray-500">@namtran92 · 38 phút trước</span>
+              <span class="badge-auto">✨ AUTO-CREATE</span>
+              <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Confidence 0.85 · Email</span>
+            </div>
+            <div class="mt-2 text-sm text-gray-800">
+              Bên bạn cho mình xin info lớp nâng cao qua mail <span class="pii-email">namtran@gmail.com</span> nha. Thanks!
+            </div>
+            <div class="text-xs text-gray-500 mt-2">
+              Trên bài viết: "Workshop Bánh Mì Việt Nam"
+            </div>
+            <div class="mt-2 flex gap-3 text-xs">
+              <button class="text-orange-600 hover:underline font-medium">Mở lead #SP-2026-001236 →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 3: phone + UNREVIEWED -->
+      <div class="p-4 hover:bg-gray-50">
+        <div class="flex items-start gap-3">
+          <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=13" alt="">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-semibold text-sm">Lê Hoàng Phúc</span>
+              <span class="text-xs text-gray-500">@phuc.le · 1h trước</span>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">⏳ Chờ review queue</span>
+            </div>
+            <div class="mt-2 text-sm text-gray-800">
+              Học phí lớp IELTS bao nhiêu vậy? Số <span class="pii-phone">0371234567</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2">SĐT hợp lệ nhưng thiếu identifier (handle/platformUserId) → cần CS xác minh.</div>
+            <div class="mt-2 flex gap-3 text-xs">
+              <button class="text-orange-600 hover:underline font-medium">Tạo lead thủ công</button>
+              <button class="text-gray-600 hover:underline">Bỏ qua</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 4: noise -->
+      <div class="p-4 hover:bg-gray-50">
+        <div class="flex items-start gap-3">
+          <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=14" alt="">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-semibold text-sm">Phạm Thu Trang</span>
+              <span class="text-xs text-gray-500">@trangpt · 2h trước</span>
+            </div>
+            <div class="mt-2 text-sm text-gray-800">
+              Đẹp quá đi ạ! Mấy chị ơi ❤️
+            </div>
+            <div class="mt-2 flex gap-3 text-xs">
+              <button class="text-gray-600 hover:underline">Reply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 5: sentiment neg -->
+      <div class="p-4 hover:bg-gray-50">
+        <div class="flex items-start gap-3">
+          <img class="w-9 h-9 rounded-full" src="https://i.pravatar.cc/100?img=15" alt="">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-semibold text-sm">Võ Minh</span>
+              <span class="text-xs text-gray-500">@minh.vo · 3h trước</span>
+              <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">⚠ Negative sentiment</span>
+            </div>
+            <div class="mt-2 text-sm text-gray-800">
+              Học phí cao quá, không phù hợp với sinh viên 😞
+            </div>
+            <div class="mt-2 flex gap-3 text-xs">
+              <button class="text-gray-600 hover:underline">Reply</button>
+              <button class="text-gray-600 hover:underline">Báo admin</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center p-4">
+        <button class="text-sm text-orange-600 hover:underline">Tải thêm 23 bình luận...</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CHANNELS VIEW ========== -->
+  <section class="view" id="view-channels">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">Kênh đang kết nối</h2>
+      <button class="text-sm px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium">+ Thêm kênh mới</button>
+    </div>
+    <div class="space-y-3">
+      <!-- FB Active -->
+      <div class="bg-white rounded-xl border border-gray-200 p-5">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">f</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold">Facebook Page</h3>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">● Hoạt động</span>
+            </div>
+            <div class="text-sm text-gray-600">cakhoman.vn · 12,400 followers · 124 posts</div>
+          </div>
+          <div class="text-right text-xs text-gray-500 space-y-1">
+            <div>Token còn <b class="text-green-600">47 ngày</b></div>
+            <div>Webhook: <span class="pulse-dot inline-block align-middle"></span> OK</div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <button class="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded">Tạm dừng</button>
+            <button class="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded">Logs</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threads pending -->
+      <div class="bg-white rounded-xl border border-gray-200 p-5 opacity-80">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-lg">@</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold">Threads</h3>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium">⏳ Đang chờ App Review</span>
+            </div>
+            <div class="text-sm text-gray-600">@cakhoman.vn · Chưa kết nối</div>
+          </div>
+          <div class="text-right text-xs text-gray-500">
+            <div>ETA: <b>2-4 tuần</b> sau khi submit</div>
+          </div>
+          <button class="text-xs px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded">Submit App Review →</button>
+        </div>
+      </div>
+
+      <!-- Zalo pending -->
+      <div class="bg-white rounded-xl border border-gray-200 p-5 opacity-80">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">Z</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold">Zalo OA</h3>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium">⏳ Đang chờ OA registration</span>
+            </div>
+            <div class="text-sm text-gray-600">"CakHoman Bánh Ngọt" · paperwork VN</div>
+          </div>
+          <div class="text-right text-xs text-gray-500">
+            <div>ETA: <b>1-2 tuần</b></div>
+          </div>
+          <button class="text-xs px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded">Hướng dẫn đăng ký →</button>
+        </div>
+      </div>
+
+      <!-- TikTok -->
+      <div class="bg-white rounded-xl border border-gray-200 p-5 opacity-80">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-black flex items-center justify-center text-white font-bold text-lg">♪</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold">TikTok Business</h3>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium">⏳ Cần 1000+ follower verified</span>
+            </div>
+            <div class="text-sm text-gray-600">@cakhoman.vn · Currently 720 followers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REPORTS VIEW ========== -->
+  <section class="view" id="view-reports">
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="text-xs text-gray-500">Tổng events hôm nay</div>
+        <div class="text-2xl font-bold text-gray-900 mt-1">128</div>
+        <div class="text-xs text-green-600 mt-1">▲ 22% so với hôm qua</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="text-xs text-gray-500">Leads mới từ Social</div>
+        <div class="text-2xl font-bold text-emerald-600 mt-1">12</div>
+        <div class="text-xs text-gray-500 mt-1">9 auto-create · 3 manual</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="text-xs text-gray-500">Unread inbox</div>
+        <div class="text-2xl font-bold text-red-600 mt-1">7</div>
+        <div class="text-xs text-gray-500 mt-1">3 DM · 4 comments</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4">
+        <div class="text-xs text-gray-500">Reply rate (7 ngày)</div>
+        <div class="text-2xl font-bold text-orange-600 mt-1">87%</div>
+        <div class="text-xs text-gray-500 mt-1">trung bình 8 phút phản hồi</div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+      <h3 class="font-semibold mb-4">Engagement 7 ngày qua</h3>
+      <!-- Simple bar chart -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T2 (22/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 65%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">82 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T3 (23/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 55%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">68 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T4 (24/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 78%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">98 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T5 (25/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 42%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">52 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T6 (26/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 88%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">110 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">T7 (27/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 95%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">120 events</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs w-20 text-gray-500">CN (28/6)</span>
+          <div class="flex-1 h-6 bg-gray-100 rounded relative">
+            <div class="h-full bg-orange-500 rounded" style="width: 100%"></div>
+            <span class="absolute right-2 top-0.5 text-xs text-gray-700">128 events</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-white rounded-xl border border-gray-200 p-5">
+        <h3 class="font-semibold mb-3">Top bài viết (7 ngày)</h3>
+        <ol class="space-y-2 text-sm">
+          <li class="flex items-center gap-3">
+            <span class="text-xs font-bold text-orange-600 w-5">1</span>
+            <span class="flex-1 truncate">Mini-game Tag voucher 100K</span>
+            <span class="text-xs sentiment-pos">💬 94 ❤️ 156</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="text-xs font-bold text-orange-600 w-5">2</span>
+            <span class="flex-1 truncate">Khai giảng khóa Bánh Pháp tháng 7</span>
+            <span class="text-xs sentiment-pos">💬 14 ❤️ 38</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="text-xs font-bold text-orange-600 w-5">3</span>
+            <span class="flex-1 truncate">Workshop Bánh Mì Việt Nam</span>
+            <span class="text-xs sentiment-pos">💬 8 ❤️ 22</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 p-5">
+        <h3 class="font-semibold mb-3">Breakdown theo nguồn</h3>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span>Facebook</span><b>128 events</b></div>
+            <div class="h-2 bg-gray-100 rounded"><div class="h-full bg-blue-500 rounded" style="width: 100%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1 text-gray-400"><span>Threads</span><b>chờ App Review</b></div>
+            <div class="h-2 bg-gray-100 rounded"><div class="h-full bg-gray-300 rounded" style="width: 0%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1 text-gray-400"><span>TikTok</span><b>chờ 1000 follower</b></div>
+            <div class="h-2 bg-gray-100 rounded"><div class="h-full bg-gray-300 rounded" style="width: 0%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1 text-gray-400"><span>Zalo OA</span><b>chờ OA paperwork</b></div>
+            <div class="h-2 bg-gray-100 rounded"><div class="h-full bg-gray-300 rounded" style="width: 0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="max-w-6xl mx-auto px-6 py-8 text-xs text-gray-500">
+  <p><b>Mockup file:</b> <code>frontend/public/mockup/social-tab.html</code> · Build 2026-06-29 19:00 ICT · Mavis · Plan: <code>docs/plans/social_channels_integration.md</code> (Phần 2)</p>
+  <p class="mt-1">Tất cả data là mock · Mở trực tiếp trong browser, không cần build · Click các tab ở header để chuyển sub-view</p>
+</footer>
+
+<script>
+  // Simple tab switcher
+  const tabs = document.querySelectorAll('#tabs button[data-view]');
+  const views = document.querySelectorAll('.view');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.view;
+      tabs.forEach(t => {
+        if (t.dataset.view === target) {
+          t.classList.remove('tab-idle'); t.classList.add('tab-active');
+        } else {
+          t.classList.remove('tab-active'); t.classList.add('tab-idle');
+        }
+      });
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + target));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
